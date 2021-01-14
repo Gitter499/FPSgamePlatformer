@@ -15,6 +15,7 @@ public class RayCaster {
         Vector v2 = mesh.points[2].copy();
         v2.negativeTranslate(mesh.points[2]);
         Vector normal = Vector.crossProduct(v1, v2);
+
         double dot = Vector.dotProduct(normal, mesh.points[1]);
         double dist = -(Vector.dotProduct(normal, rayOrigin) + dot) / (Vector.dotProduct(normal, rayDirection));
         return dist;

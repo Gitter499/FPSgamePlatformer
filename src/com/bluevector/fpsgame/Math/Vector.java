@@ -35,31 +35,29 @@ public class Vector {
         z *= scalar;
     }
 
-    public void multiply(Vector v) {
-        x *= v.x;
-        y *= v.y;
-        z *= v.z;
+    public Vector Multiply(Vector a, Vector b) {
+        return new Vector(a.x*b.x,a.y*b.y,a.z*b.z);
     }
 
     private void rotateX(Vector v, double theta) {
         double cos = Math.cos(theta);
         double sin = Math.sin(theta);
-        y = v.y * cos - v.z * sin;
-        z = v.y * sin + v.z * cos;
+        this.y = v.y * cos - v.z * sin;
+        this.z = v.y * sin + v.z * cos;
     }
 
     private void rotateY(Vector v, double theta) {
         double cos = Math.cos(theta);
         double sin = Math.sin(theta);
-        x = v.x * cos + v.z * sin;
-        z = -v.y * sin + v.z * cos;
+        this.x = v.x * cos + v.z * sin;
+        this.z = -v.y * sin + v.z * cos;
     }
 
     private void rotateZ(Vector v, double theta) {
         double cos = Math.cos(theta);
         double sin = Math.sin(theta);
-        x = v.x * cos - v.y * sin;
-        y = v.x * sin + v.y * cos;
+        this.x = v.x * cos - v.y * sin;
+        this. y = v.x * sin + v.y * cos;
     }
 
     public void rotate(Vector origin, Vector rotations, String eulerOrder) {
@@ -101,6 +99,7 @@ public class Vector {
 
     public static Vector crossProduct(Vector a, Vector b) {
         Vector unitA = a.copy();
+        //unitA.print();
         unitA.normalize();
         Vector unitB = b.copy();
         unitB.normalize();
