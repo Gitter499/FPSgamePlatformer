@@ -1,4 +1,4 @@
-package main.java.com.bluevector.fpsgame.Math;
+package com.bluevector.fpsgame.Math;
 
 public class Vector {
     double x;
@@ -19,6 +19,12 @@ public class Vector {
         x += v.x;
         y += v.y;
         z += v.z;
+    }
+
+    public void negativeTranslate(Vector v) {
+        x -= v.x;
+        y -= v.y;
+        z -= v.z;
     }
 
     public void scale(double scalar) {
@@ -56,9 +62,7 @@ public class Vector {
 
     public void rotate(Vector origin, Vector rotations, String eulerOrder) {
         Vector v = this.copy();
-        Vector reversedOrigin = origin.copy();
-        reversedOrigin.scale(-1);
-        v.translate(reversedOrigin);
+        v.negativeTranslate(origin);
         for (int i = 0; i < 3; i++) {
             if (eulerOrder.charAt(i) == 'x') {
                 v.rotateX(v, rotations.x);
@@ -78,7 +82,7 @@ public class Vector {
         return Math.sqrt(x * x + y * y + z * z);
     }
 
-    public double dotProduct(Vector a, Vector b) {
+    public static double dotProduct(Vector a, Vector b) {
         return (a.x * b.x + a.y * b.y + a.z * b.z) / a.magnitude() / b.magnitude();
     }
 
@@ -93,32 +97,30 @@ public class Vector {
         }
     }
 
-    public void crossProduct(Vector a, Vector b) {
-        x = a.y * b.z - a.z * b.y;
-        y = a.x * b.z - a.z * b.x;
-        z = a.x * b.y - a.y * b.x;
+    public static Vector crossProduct(Vector a, Vector b) {
+        Vector unitA = a.copy();
+        unitA.normalize();
+        Vector unitB = b.copy();
+        unitB.normalize();
+        return new Vector(unitA.y * unitB.z - unitA.z * unitB.y, unitA.x * unitB.z - unitA.z * unitB.x,
+                unitA.x * unitB.y - unitA.y * unitB.x);
     }
 
-    public static Vector direction(String input){
-        if (input == "up"){
-            return new Vector(0,1,0);
-        }
-        else if (input == "down"){
-            return new Vector(0,-1,0);
-        }
-        else if (input == "left"){
-            return new Vector(-1,0,0);
-        }
-        else if (input == "right"){
-            return new Vector(1,0,0);
-        }
-        else if (input == "forward"){
-            return new Vector(0,0, 1);
-        }
-        else if (input == "backward"){
-            return new Vector(0,0,-1);
+    public static Vector direction(String input) {
+        if (input == "up") {
+            return new Vector(0, 1, 0);
+        } else if (input == "down") {
+            return new Vector(0, -1, 0);
+        } else if (input == "left") {
+            return new Vector(-1, 0, 0);
+        } else if (input == "right") {
+            return new Vector(1, 0, 0);
+        } else if (input == "forward") {
+            return new Vector(0, 0, 1);
+        } else if (input == "backward") {
+            return new Vector(0, 0, -1);
         } else {
-            return new Vector(0,0,0);
+            return new Vector(0, 0, 0);
         }
     }
 }
