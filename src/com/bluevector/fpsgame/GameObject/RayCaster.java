@@ -1,7 +1,8 @@
 package com.bluevector.fpsgame.GameObject;
 
-import main.java.com.bluevector.fpsgame.Math.Triangle;
-import main.java.com.bluevector.fpsgame.Math.Vector;
+import com.bluevector.fpsgame.Math.Gmath;
+import com.bluevector.fpsgame.Math.Triangle;
+import com.bluevector.fpsgame.Math.Vector;
 
 import java.lang.Math;
 
@@ -19,35 +20,9 @@ public class RayCaster {
         return dist;
     }
 
-    public static boolean interceptsTriangle(Vector normal, Vector interceptionPoint, Triangle mesh){
+    public static boolean interceptsTriangle(Vector normal, Vector interceptionPoint, Triangle mesh) {
 
-        /*
-            planeX coefficient is normalX
-            planeY coefficient is normalY
-            planeZ coefficient is normalZ
-            planeD normal dot product point A
-        */
-
-        /*
-
-        function triangleContainsIntersection(Vector p,Triangle mesh){
-    let n = Vector.normalize(vm.crossProduct(vm.subtract(t[1],t[0]),vm.subtract(t[2],t[0])))
-    let AB = vm.normalize(vm.subtract(t[1],t[0]))
-    let AC = vm.normalize(vm.subtract(t[2],t[0]))
-    let BC = vm.normalize(vm.subtract(t[2],t[1]))
-    let C = (Math.sign(vm.dotProduct(n,AB)) == Math.sign(vm.dotProduct(n,vm.normalize(vm.subtract(p,t[0])))))
-    let B = (Math.sign(vm.dotProduct(n,AC)) == Math.sign(vm.dotProduct(n,vm.normalize(vm.subtract(p,t[0])))))
-    let A = (Math.sign(vm.dotProduct(n,BC)) == Math.sign(vm.dotProduct(n,vm.normalize(vm.subtract(p,t[1])))))
-    let contains = (A && B && C)
-    return contains
-}
-
-         */
-
-        Vector normalN = normal.copy();
         // Refactor to only calculate normal once
-
-        normalN.normalize();
 
         Vector _Ab = mesh.points[1].copy();
         Vector _Bc = mesh.points[2].copy();
@@ -73,18 +48,28 @@ public class RayCaster {
         boolean A;
         boolean B;
         boolean C;
+        Vector temp = new Vector(0, 0, 0);
 
-        A = (Math.sign(-1));
+        temp = interceptionPoint.copy();
+        temp.negativeTranslate((mesh.points[0]));
+        temp.normalize();
+        A = Gmath.sign(Vector.dotProduct(normal, _Ab)) == Gmath.sign(Vector.dotProduct(normal, temp));
 
-        /*
-           let C = (Math.sign(vm.dotProduct(n,AB)) == Math.sign(vm.dotProduct(n,vm.normalize(vm.subtract(p,t[0])))))
-        let B = (Math.sign(vm.dotProduct(n,AC)) == Math.sign(vm.dotProduct(n,vm.normalize(vm.subtract(p,t[0])))))
-        let A = (Math.sign(vm.dotProduct(n,BC)) == Math.sign(vm.dotProduct(n,vm.normalize(vm.subtract(p,t[1])))))
-         */
 
+        temp = interceptionPoint.copy();
+        temp.negativeTranslate((mesh.points[0]));
+        temp.normalize();
+        B = Gmath.sign(Vector.dotProduct(normal, _Ac)) == Gmath.sign(Vector.dotProduct(normal, temp));
+
+        temp = interceptionPoint.copy();
+        temp.negativeTranslate((mesh.points[1]));
+        temp.normalize();
+        C = Gmath.sign(Vector.dotProduct(normal, _Bc)) == Gmath.sign(Vector.dotProduct(normal, temp));
 
         return false;
     }
 
 }
+
+
 

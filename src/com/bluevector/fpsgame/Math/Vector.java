@@ -1,5 +1,7 @@
 package com.bluevector.fpsgame.Math;
 
+import java.lang.Math;
+
 public class Vector {
     double x;
     double y;
