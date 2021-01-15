@@ -78,4 +78,46 @@ public class Vector {
         return cos;
     }
 
+    private static Vector rotateX(Vector v1, float theta) {
+        Vector v = v1.copy();
+        float cos = (float) Math.cos(theta);
+        float sin = (float) Math.sin(theta);
+        v.y = v.y * cos - v.z * sin;
+        v.z = v.y * sin + v.z * cos;
+        return v;
+    }
+
+    private static Vector rotateY(Vector v1, float theta) {
+        Vector v = v1.copy();
+        float cos = (float) Math.cos(theta);
+        float sin = (float) Math.sin(theta);
+        v.x = v.x * cos + v.z * sin;
+        v.z = -v.y * sin + v.z * cos;
+        return v;
+    }
+
+    private static Vector rotateZ(Vector v1, float theta) {
+        Vector v = v1.copy();
+        float cos = (float) Math.cos(theta);
+        float sin = (float) Math.sin(theta);
+        v.x = v.x * cos - v.y * sin;
+        v.y = v.x * sin + v.y * cos;
+        return v;
+    }
+
+    public static Vector rotate(Vector origin, Vector direction, Vector rotations, String eulerOrder) {
+        Vector v = Vector.subtract(direction,origin);
+        for (int i = 0; i < 3; i++) {
+            if (eulerOrder.charAt(i) == 'x') {
+                v = Vector.rotateX(v,rotations.x);
+            } else if (eulerOrder.charAt(i) == 'y') {
+                v = Vector.rotateY(v,rotations.y);
+            } else if (eulerOrder.charAt(i) == 'z') {
+                v = Vector.rotateZ(v,rotations.z);
+            }
+        }
+        v = v.add(v,origin);
+        return v;
+    }
+
 }
