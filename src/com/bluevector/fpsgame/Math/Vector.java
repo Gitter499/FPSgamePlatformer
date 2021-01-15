@@ -3,125 +3,79 @@ package com.bluevector.fpsgame.Math;
 import java.lang.Math;
 
 public class Vector {
-    double x;
-    double y;
-    double z;
 
-    public Vector(double X, double Y, double Z) {
-        x = X;
-        y = Y;
-        z = Z;
+    public float x;
+    public float y;
+    public float z;
+
+    public Vector(float x, float y, float z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     public Vector copy() {
-        return new Vector(x, y, z);
+        return new Vector(this.x, this.y, this.z);
     }
 
-    public void translate(Vector v) {
-        x += v.x;
-        y += v.y;
-        z += v.z;
+    public void print() {
+        System.out.println("\nv | x: " + this.x + ",  y: " + this.y + ",  z: " + this.z + "\n");
     }
 
-    public void negativeTranslate(Vector v) {
-        x -= v.x;
-        y -= v.y;
-        z -= v.z;
+    public void print(String msg) {
+        System.out.println("\n" + msg + "\nv | x: " + this.x + ",  y: " + this.y + ",  z: " + this.z + "\n");
     }
 
-    public void scale(double scalar) {
-        x *= scalar;
-        y *= scalar;
-        z *= scalar;
+    public static Vector add(Vector v1, Vector v2) {
+        Vector v = new Vector(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
+        // v.print("Sum Vector:");
+        return v;
     }
 
-    public Vector Multiply(Vector a, Vector b) {
-        return new Vector(a.x*b.x,a.y*b.y,a.z*b.z);
+    public static Vector subtract(Vector v1, Vector v2) {
+        Vector v = new Vector(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
+        // v.print("Difference Vector:");
+        return v;
     }
 
-    private void rotateX(Vector v, double theta) {
-        double cos = Math.cos(theta);
-        double sin = Math.sin(theta);
-        this.y = v.y * cos - v.z * sin;
-        this.z = v.y * sin + v.z * cos;
+    public static Vector multiply(Vector v1, Vector v2) {
+        Vector v = new Vector(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
+        // v.print("Product Vector:");
+        return v;
     }
 
-    private void rotateY(Vector v, double theta) {
-        double cos = Math.cos(theta);
-        double sin = Math.sin(theta);
-        this.x = v.x * cos + v.z * sin;
-        this.z = -v.y * sin + v.z * cos;
+    public static Vector scalarMultiply(Vector v1, float scalar) {
+        Vector v = new Vector(v1.x * scalar, v1.y * scalar, v1.z * scalar);
+        // v.print("Scaled Vector:");
+        return v;
     }
 
-    private void rotateZ(Vector v, double theta) {
-        double cos = Math.cos(theta);
-        double sin = Math.sin(theta);
-        this.x = v.x * cos - v.y * sin;
-        this. y = v.x * sin + v.y * cos;
+    public static float magnitude(Vector v) {
+        return (float) (Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z));
     }
 
-    public void rotate(Vector origin, Vector rotations, String eulerOrder) {
-        Vector v = this.copy();
-        v.negativeTranslate(origin);
-        for (int i = 0; i < 3; i++) {
-            if (eulerOrder.charAt(i) == 'x') {
-                v.rotateX(v, rotations.x);
-            } else if (eulerOrder.charAt(i) == 'y') {
-                v.rotateY(v, rotations.y);
-            } else {
-                v.rotateZ(v, rotations.z);
-            }
-        }
-        v.translate(origin);
-        x = v.x;
-        y = v.y;
-        z = v.z;
-    }
-
-    public double magnitude() {
-        return Math.sqrt(x * x + y * y + z * z);
-    }
-
-    public static double dotProduct(Vector a, Vector b) {
-        return (a.x * b.x + a.y * b.y + a.z * b.z) / a.magnitude() / b.magnitude();
-    }
-
-    public double angleDifference(Vector a, Vector b) {
-        return Math.acos(this.dotProduct(a, b));
-    }
-
-    public void normalize() {
-        double magnitude = this.magnitude();
+    public static Vector normal(Vector v1) {
+        float magnitude = Vector.magnitude(v1);
         if (magnitude != 1) {
-            this.scale(1 / magnitude);
-        }
-    }
-
-    public static Vector crossProduct(Vector a, Vector b) {
-        Vector unitA = a.copy();
-        //unitA.print();
-        unitA.normalize();
-        Vector unitB = b.copy();
-        unitB.normalize();
-        return new Vector(unitA.y * unitB.z - unitA.z * unitB.y, unitA.x * unitB.z - unitA.z * unitB.x,
-                unitA.x * unitB.y - unitA.y * unitB.x);
-    }
-
-    public static Vector direction(String input) {
-        if (input == "up") {
-            return new Vector(0, 1, 0);
-        } else if (input == "down") {
-            return new Vector(0, -1, 0);
-        } else if (input == "left") {
-            return new Vector(-1, 0, 0);
-        } else if (input == "right") {
-            return new Vector(1, 0, 0);
-        } else if (input == "forward") {
-            return new Vector(0, 0, 1);
-        } else if (input == "backward") {
-            return new Vector(0, 0, -1);
+            Vector v = Vector.scalarMultiply(v1, 1 / magnitude);
+            // v.print("Normalized Vector:");
+            return v;
         } else {
-            return new Vector(0, 0, 0);
+            // v1.print("Normalized Vector");
+            return v1;
         }
     }
+
+    public static Vector crossProduct(Vector v1, Vector v2) {
+        Vector v = new Vector(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x);
+        // v.print("Orthogonal Vector:");
+        return v;
+    }
+
+    public static float dotProduct(Vector v1, Vector v2) {
+        float cos = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+        // System.out.println("\nDot Product\n" + cos + "\n");
+        return cos;
+    }
+
 }
